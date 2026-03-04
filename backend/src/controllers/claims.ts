@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
 import { Claim, CreateClaimDTO, UpdateClaimDTO } from "../types/claims";
+import { createClaimsSchema, updateClaimsSchema } from "../schemas/claims";
 
 // In-memory database - replace with PostgreSQL in production
 let claims: Claim[] = [
@@ -68,13 +69,14 @@ export const getClaimById = (req: Request, res: Response): void => {
 export const createClaim = (req: Request, res: Response): void => {
   const body: CreateClaimDTO = req.body;
 
-  if (!body.driverName || !body.vehicle || !body.accidentDate) {
-    res.status(400).json({ error: "Missing required fields" });
+  const result = createClaimsSchema.safeParse(body)
+  if (!result.success) {
+    res.status(400).json({ error: result.error.issues })
     return;
   }
 
   const newClaim: Claim = {
-    ...body,
+    ...result.data,
     id: uuidv4(),
     status: "open",
     createdAt: new Date().toISOString(),
@@ -96,9 +98,15 @@ export const updateClaim = (req: Request, res: Response): void => {
 
   const body: UpdateClaimDTO = req.body;
 
+  const result = updateClaimsSchema.safeParse(body)
+  if (!result.success) {
+    res.status(400).json({ error: result.error.issues })
+    return;
+  }
+
   claims[index] = {
     ...claims[index],
-    ...body,
+    ...result.data,
     updatedAt: new Date().toISOString(),
   };
 
