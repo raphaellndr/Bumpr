@@ -5,8 +5,10 @@ import type { Claim, CreateClaimDTO, UpdateClaimDTO } from "@/types/claims";
 const api = axios.create({ baseURL: "/api" });
 
 export const claimsApi = {
-  getAll: async (): Promise<Claim[]> => {
-    const { data } = await api.get<{ data: Claim[] }>("/claims");
+  getAll: async (status?: string, sortBy?: string, order?: string): Promise<Claim[]> => {
+    const { data } = await api.get<{ data: Claim[] }>("/claims", {
+      params: { status, sortBy, order },
+    });
     return data.data;
   },
   getById: async (id: string): Promise<Claim> => {

@@ -33,9 +33,21 @@ let claims: Claim[] = [
 
 // GET /api/claims
 export const getAllClaims = (req: Request, res: Response): void => {
-  const { status } = req.query;
+  function compare(a: Claim, b: Claim, property: keyof Claim, order: string): number {
+    const valA = a[property] ?? "";
+    const valB = b[property] ?? "";
 
-  const result = status ? claims.filter((c) => c.status === status) : claims;
+    if (valA < valB) return order === "asc" ? -1 : 1;
+    if (valA > valB) return order === "asc" ? 1 : -1;
+    return 0;
+  }
+
+  const { status, sortBy, order } = req.query;
+
+  let result = status ? claims.filter((c) => c.status === status) : claims;
+  result = sortBy
+    ? result.sort((a, b) => compare(a, b, sortBy as keyof Claim, order as string))
+    : result;
 
   res.json({ data: result, total: result.length });
 };
