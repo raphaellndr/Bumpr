@@ -1,0 +1,107 @@
+import { Request, Response } from "express";
+import { v4 as uuidv4 } from "uuid";
+
+import { Claim, CreateClaimDTO, UpdateClaimDTO } from "../types/claims";
+
+// In-memory database - replace with PostgreSQL in production
+let claims: Claim[] = [
+  {
+    id: "1",
+    policyNumber: "POL-2024-001",
+    driverName: "Marie Dupont",
+    vehicle: "Renault Clio 2021",
+    accidentDate: "2024-11-15",
+    description: "Rear collision on A35 highway",
+    status: "under_review",
+    estimatedAmount: 3200,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: "2",
+    policyNumber: "POL-2024-002",
+    driverName: "Jean Martin",
+    vehicle: "Peugeot 308 2019",
+    accidentDate: "2024-12-02",
+    description: "Parking lot scrape",
+    status: "open",
+    estimatedAmount: 850,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
+// GET /api/claims
+export const getAllClaims = (req: Request, res: Response): void => {
+  const { status } = req.query;
+
+  const result = status ? claims.filter((c) => c.status === status) : claims;
+
+  res.json({ data: result, total: result.length });
+};
+
+// GET /api/claims/:id
+export const getClaimById = (req: Request, res: Response): void => {
+  const claim = claims.find((c) => c.id === req.params.id);
+
+  if (!claim) {
+    res.status(404).json({ error: "Claim not found" });
+    return;
+  }
+
+  res.json({ data: claim });
+};
+
+// POST /api/claims
+export const createClaim = (req: Request, res: Response): void => {
+  const body: CreateClaimDTO = req.body;
+
+  if (!body.driverName || !body.vehicle || !body.accidentDate) {
+    res.status(400).json({ error: "Missing required fields" });
+    return;
+  }
+
+  const newClaim: Claim = {
+    ...body,
+    id: uuidv4(),
+    status: "open",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  claims.push(newClaim);
+  res.status(201).json({ data: newClaim });
+};
+
+// PATCH /api/claims/:id
+export const updateClaim = (req: Request, res: Response): void => {
+  const index = claims.findIndex((c) => c.id === req.params.id);
+
+  if (index === -1) {
+    res.status(404).json({ error: "Claim not found" });
+    return;
+  }
+
+  const body: UpdateClaimDTO = req.body;
+
+  claims[index] = {
+    ...claims[index],
+    ...body,
+    updatedAt: new Date().toISOString(),
+  };
+
+  res.json({ data: claims[index] });
+};
+
+// DELETE /api/claims/:id
+export const deleteClaim = (req: Request, res: Response): void => {
+  const index = claims.findIndex((c) => c.id === req.params.id);
+
+  if (index === -1) {
+    res.status(404).json({ error: "Claim not found" });
+    return;
+  }
+
+  claims.splice(index, 1);
+  res.status(204).send();
+};
