@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 
+import errorHandler from "./middlewares/error";
 import authRouter from "./routes/auth";
 import claimRouter from "./routes/claim";
 
@@ -21,5 +22,7 @@ app.get("/health", (_req, res) => {
 
 app.use("/claims", claimRouter);
 app.use("/auth", authRouter);
+
+app.use(errorHandler);
 
 export default app;
