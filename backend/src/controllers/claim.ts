@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { Prisma } from "../generated/prisma/client";
-import { ClaimService } from "../services/claim.service";
+import { ClaimService } from "../services/claim";
 
 export const getClaims = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -29,9 +29,7 @@ export const getClaim = async (req: Request, res: Response, next: NextFunction) 
 
 export const createClaim = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = req.body as Prisma.ClaimCreateInput;
-    const claim = await ClaimService.create(data);
-
+    const claim = await ClaimService.create(req.body);
     return res.status(201).json({ data: claim });
   } catch (err) {
     next(err);

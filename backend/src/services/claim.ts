@@ -1,5 +1,5 @@
 import { Prisma } from "../generated/prisma/client";
-import { ClaimRepository } from "../repositories/claim.repository";
+import { ClaimRepository } from "../repositories/claim";
 
 function _checkId(id: number) {
   if (id <= 0) throw new Error("'id' cannot be negative");
