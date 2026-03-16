@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 
+import authRouter from "./routes/auth";
 import claimRouter from "./routes/claim";
 
 const app = express();
@@ -19,5 +20,6 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/claims", claimRouter);
+app.use("/auth", authRouter);
 
 export default app;
