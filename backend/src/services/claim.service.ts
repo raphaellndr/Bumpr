@@ -1,0 +1,34 @@
+import { Prisma } from "../generated/prisma/client";
+import { ClaimRepository } from "../repositories/claim.repository";
+
+function _checkId(id: number) {
+  if (id <= 0) throw new Error("'id' cannot be negative");
+}
+
+export const ClaimService = {
+  findAll: async () => {
+    return ClaimRepository.findAll();
+  },
+
+  findById: async (id: number) => {
+    _checkId(id);
+
+    return ClaimRepository.findById(id);
+  },
+
+  create: async (data: Prisma.ClaimCreateInput) => {
+    return ClaimRepository.create(data);
+  },
+
+  update: async (id: number, data: Prisma.ClaimUpdateInput) => {
+    _checkId(id);
+
+    return ClaimRepository.update(id, data);
+  },
+
+  delete: async (id: number) => {
+    _checkId(id);
+
+    return ClaimRepository.delete(id);
+  },
+};
