@@ -1,6 +1,8 @@
 import cors from "cors";
 import express from "express";
 
+import claimRouter from "./routes/claim.routes";
+
 const app = express();
 
 app.use(express.json());
@@ -15,5 +17,7 @@ app.use(cors(corsOptions));
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok" });
 });
+
+app.use("/claims", claimRouter);
 
 export default app;
