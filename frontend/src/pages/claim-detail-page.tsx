@@ -15,7 +15,7 @@ export default function ClaimDetailPage() {
   useEffect(() => {
     if (!id) return;
     claimsApi
-      .getById(id)
+      .getById(Number(id))
       .then(setClaim)
       .finally(() => setLoading(false));
   }, [id]);
@@ -111,10 +111,10 @@ export default function ClaimDetailPage() {
                 onChange={handleStatusChange}
                 className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               >
-                <option value="open">Open</option>
-                <option value="under_review">Under review</option>
-                <option value="in_repair">In repair</option>
-                <option value="closed">Closed</option>
+                <option value="OPEN">Open</option>
+                <option value="UNDER_REVIEW">Under review</option>
+                <option value="IN_REPAIR">In repair</option>
+                <option value="CLOSED">Closed</option>
               </select>
             </div>
             <button

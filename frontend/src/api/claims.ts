@@ -1,29 +1,45 @@
-import axios from "axios";
+import z from "zod";
 
-import type { Claim, CreateClaimDTO, UpdateClaimDTO } from "@/types/claims";
+import { ClaimSchema, type Claim, type CreateClaimDTO, type UpdateClaimDTO } from "@/types/claims";
 
-const api = axios.create({ baseURL: "/api" });
+import apiClient from "./client";
 
 export const claimsApi = {
   getAll: async (status?: string, sortBy?: string, order?: string): Promise<Claim[]> => {
-    const { data } = await api.get<{ data: Claim[] }>("/claims", {
-      params: { status, sortBy, order },
+    const { data } = await apiClient.get<{ data: Claim[] }>("/claims", {
+      params: {
+        ...(status && { status }),
+        ...(sortBy && { sortBy }),
+        ...(order && { order }),
+      },
     });
-    return data.data;
+    return z.array(ClaimSchema).parse(data.data);
   },
-  getById: async (id: string): Promise<Claim> => {
-    const { data } = await api.get<{ data: Claim }>(`/claims/${id}`);
-    return data.data;
+
+  getById: async (id: number): Promise<Claim> => {
+    const { data } = await apiClient.get<{ data: Claim }>(`/claims/${id}`);
+    return ClaimSchema.parse(data.data);
   },
+
   create: async (payload: CreateClaimDTO): Promise<Claim> => {
-    const { data } = await api.post<{ data: Claim }>("/claims", payload);
-    return data.data;
+    try {
+      console.log(payload)
+      const { data } = await apiClient.post<{ data: Claim }>("/claims", payload);
+      return ClaimSchema.parse(data.data);
+    } catch (err) {
+      const error = err as Error
+      console.log(error)
+
+      throw new Error(error.message)
+    }
   },
-  update: async (id: string, payload: UpdateClaimDTO): Promise<Claim> => {
-    const { data } = await api.patch<{ data: Claim }>(`/claims/${id}`, payload);
-    return data.data;
+
+  update: async (id: number, payload: UpdateClaimDTO): Promise<Claim> => {
+    const { data } = await apiClient.patch<{ data: Claim }>(`/claims/${id}`, payload);
+    return ClaimSchema.parse(data.data);
   },
-  delete: async (id: string): Promise<void> => {
-    await api.delete(`/claims/${id}`);
+
+  delete: async (id: number): Promise<void> => {
+    await apiClient.delete(`/claims/${id}`);
   },
 };

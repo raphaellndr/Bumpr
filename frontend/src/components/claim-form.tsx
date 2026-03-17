@@ -1,21 +1,22 @@
 import { useState } from "react";
-
 import { claimsApi } from "@/api/claims";
 import type { CreateClaimDTO } from "@/types/claims";
 
 const EMPTY: CreateClaimDTO = {
-  policyNumber: "",
-  driverName: "",
+  reference: "",
   vehicle: "",
-  accidentDate: "",
-  description: "",
+  driverName: "",
+  policyNumber: "",
+  expertId: 0,
 };
 
 const FIELDS: { name: keyof CreateClaimDTO; label: string; type: string }[] = [
   { name: "driverName", label: "Driver name", type: "text" },
   { name: "vehicle", label: "Vehicle", type: "text" },
+  { name: "reference", label: "Reference", type: "text" },
   { name: "policyNumber", label: "Policy number", type: "text" },
-  { name: "accidentDate", label: "Accident date", type: "date" },
+  { name: "expertId", label: "Expert ID", type: "number" },
+  { name: "estimatedAmount", label: "Estimated amount", type: "number" },
 ];
 
 export default function ClaimForm({ onCreated }: { onCreated: () => void }) {
@@ -25,7 +26,10 @@ export default function ClaimForm({ onCreated }: { onCreated: () => void }) {
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.type === "number" ? Number(e.target.value) : e.target.value,
+    }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,11 +66,13 @@ export default function ClaimForm({ onCreated }: { onCreated: () => void }) {
           onClick={() => setOpen(false)}
           className="text-xl leading-none text-gray-400 hover:text-gray-600"
         >
-          x
+          ×
         </button>
       </div>
 
-      {error && <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-500">{error}</p>}
+      {error && (
+        <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-500">{error}</p>
+      )}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4 grid grid-cols-2 gap-4">
@@ -78,7 +84,7 @@ export default function ClaimForm({ onCreated }: { onCreated: () => void }) {
                 name={name}
                 value={form[name] ?? ""}
                 onChange={handleChange}
-                required
+                required={name !== "estimatedAmount"}
                 className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
@@ -89,7 +95,7 @@ export default function ClaimForm({ onCreated }: { onCreated: () => void }) {
           <label className="mb-1 block text-xs font-medium text-gray-600">Description</label>
           <textarea
             name="description"
-            value={form.description}
+            value={form.description ?? ""}
             onChange={handleChange}
             rows={3}
             className="w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"

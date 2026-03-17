@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
-
 import { claimsApi } from "@/api/claims";
 import type { Claim } from "@/types/claims";
-
 import StatusBadge from "./status-badge";
 
 interface Props {
@@ -33,7 +31,10 @@ export default function ClaimCard({ claim, onUpdate }: Props) {
       </div>
 
       <p className="mb-2 font-mono text-xs text-gray-400">{claim.policyNumber}</p>
-      <p className="mb-4 line-clamp-2 text-sm text-gray-600">{claim.description}</p>
+
+      {claim.description && (
+        <p className="mb-4 line-clamp-2 text-sm text-gray-600">{claim.description}</p>
+      )}
 
       <div className="flex items-center justify-between border-t border-gray-50 pt-3">
         <div className="flex items-center gap-3">
@@ -42,9 +43,7 @@ export default function ClaimCard({ claim, onUpdate }: Props) {
               {claim.estimatedAmount.toLocaleString("fr-FR")} EUR
             </span>
           )}
-          <span className="text-xs text-gray-400">
-            {new Date(claim.accidentDate).toLocaleDateString("en-GB")}
-          </span>
+          <span className="text-xs text-gray-400">Expert #{claim.expertId}</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -53,10 +52,10 @@ export default function ClaimCard({ claim, onUpdate }: Props) {
             onChange={handleStatusChange}
             className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs text-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
           >
-            <option value="open">Open</option>
-            <option value="under_review">Under review</option>
-            <option value="in_repair">In repair</option>
-            <option value="closed">Closed</option>
+            <option value="OPEN">Open</option>
+            <option value="UNDER_REVIEW">Under review</option>
+            <option value="IN_REPAIR">In repair</option>
+            <option value="CLOSED">Closed</option>
           </select>
 
           <Link
