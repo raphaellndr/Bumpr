@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { claimsApi } from "@/api/claims";
 import type { CreateClaimDTO } from "@/types/claims";
 
@@ -70,9 +71,7 @@ export default function ClaimForm({ onCreated }: { onCreated: () => void }) {
         </button>
       </div>
 
-      {error && (
-        <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-500">{error}</p>
-      )}
+      {error && <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-500">{error}</p>}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4 grid grid-cols-2 gap-4">

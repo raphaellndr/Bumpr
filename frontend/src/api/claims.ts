@@ -23,14 +23,14 @@ export const claimsApi = {
 
   create: async (payload: CreateClaimDTO): Promise<Claim> => {
     try {
-      console.log(payload)
+      console.log(payload);
       const { data } = await apiClient.post<{ data: Claim }>("/claims", payload);
       return ClaimSchema.parse(data.data);
     } catch (err) {
-      const error = err as Error
-      console.log(error)
+      const error = err as Error;
+      console.log(error);
 
-      throw new Error(error.message)
+      throw new Error(error.message);
     }
   },
 

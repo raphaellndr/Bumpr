@@ -30,7 +30,7 @@ export const UpdateClaimSchema = CreateClaimSchema.extend({
   status: StatusEnum.optional(),
 }).partial();
 
-export type Status = z.infer<typeof StatusEnum>
+export type Status = z.infer<typeof StatusEnum>;
 export type Claim = z.infer<typeof ClaimSchema>;
 export type CreateClaimDTO = z.infer<typeof CreateClaimSchema>;
 export type UpdateClaimDTO = z.infer<typeof UpdateClaimSchema>;

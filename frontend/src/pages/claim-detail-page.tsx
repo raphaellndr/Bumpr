@@ -55,7 +55,6 @@ export default function ClaimDetailPage() {
 
   const details = [
     { label: "Policy number", value: claim.policyNumber },
-    { label: "Accident date", value: new Date(claim.accidentDate).toLocaleDateString("en-GB") },
     {
       label: "Estimated amount",
       value: claim.estimatedAmount ? `${claim.estimatedAmount.toLocaleString("fr-FR")} EUR` : "-",

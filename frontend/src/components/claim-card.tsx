@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+
 import { claimsApi } from "@/api/claims";
 import type { Claim } from "@/types/claims";
+
 import StatusBadge from "./status-badge";
 
 interface Props {
