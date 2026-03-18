@@ -1,11 +1,17 @@
 import z from "zod";
 
-import { ClaimSchema, type Claim, type CreateClaimDTO, type UpdateClaimDTO } from "@/types/claims";
+import {
+  ClaimSchema,
+  Status,
+  type Claim,
+  type CreateClaimDTO,
+  type UpdateClaimDTO,
+} from "@/types/claims";
 
 import apiClient from "./client";
 
 export const claimsApi = {
-  getAll: async (status?: string, sortBy?: string, order?: string): Promise<Claim[]> => {
+  getAll: async (status?: Status, sortBy?: string, order?: string): Promise<Claim[]> => {
     const { data } = await apiClient.get<{ data: Claim[] }>("/claims", {
       params: {
         ...(status && { status }),

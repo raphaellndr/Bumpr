@@ -6,8 +6,8 @@ function _checkId(id: number) {
 }
 
 export const ClaimService = {
-  findAll: async () => {
-    return ClaimRepository.findAll();
+  findAll: async (status?: string, sortBy?: string, order?: string) => {
+    return ClaimRepository.findAll(status, sortBy, order);
   },
 
   findById: async (id: number) => {

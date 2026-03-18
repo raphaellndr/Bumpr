@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { Status } from "../generated/prisma/client";
+
 export const claimValidator = z.object({
   reference: z.string(),
   vehicle: z.string(),
@@ -8,4 +10,5 @@ export const claimValidator = z.object({
   estimatedAmount: z.number().optional(),
   expertId: z.number(),
   description: z.string().optional(),
+  status: z.enum(Status).optional(),
 });

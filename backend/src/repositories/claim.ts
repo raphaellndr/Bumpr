@@ -1,9 +1,12 @@
 import { prisma } from "../db/prisma";
-import { Prisma } from "../generated/prisma/client";
+import { Prisma, Status } from "../generated/prisma/client";
 
 export const ClaimRepository = {
-  findAll: async () => {
-    return prisma.claim.findMany();
+  findAll: async (status?: string, sortBy?: string, order?: string) => {
+    return prisma.claim.findMany({
+      where: status ? { status: status as Status } : undefined,
+      orderBy: sortBy ? { [sortBy]: order ?? "asc" } : undefined,
+    });
   },
 
   findById: async (id: number) => {

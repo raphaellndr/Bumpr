@@ -3,13 +3,13 @@ import { useCallback, useEffect, useState } from "react";
 import { claimsApi } from "@/api/claims";
 import ClaimCard from "@/components/claim-card";
 import ClaimForm from "@/components/claim-form";
-import type { Claim } from "@/types/claims";
+import { Status, type Claim } from "@/types/claims";
 
 export default function ClaimsPage() {
   const [claims, setClaims] = useState<Claim[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState<Status | undefined>(undefined);
   const [sortBy, setSortBy] = useState("");
   const [order, setOrder] = useState("asc");
 
@@ -50,14 +50,14 @@ export default function ClaimsPage() {
         <div className="mb-4 flex items-center gap-2">
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            onChange={(e) => setStatusFilter(e.target.value as Status)}
             className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs text-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
           >
             <option value="">All statuses</option>
-            <option value="open">Open</option>
-            <option value="under_review">Under review</option>
-            <option value="in_repair">In repair</option>
-            <option value="closed">Closed</option>
+            <option value="OPEN">Open</option>
+            <option value="UNDER_REVIEW">Under review</option>
+            <option value="IN_REPAIR">In repair</option>
+            <option value="CLOSED">Closed</option>
           </select>
 
           <select
@@ -66,7 +66,6 @@ export default function ClaimsPage() {
             className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs text-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
           >
             <option value="">No sort</option>
-            <option value="accidentDate">Accident date</option>
             <option value="estimatedAmount">Amount</option>
             <option value="createdAt">Created at</option>
           </select>
@@ -83,7 +82,7 @@ export default function ClaimsPage() {
           {(statusFilter || sortBy) && (
             <button
               onClick={() => {
-                setStatusFilter("");
+                setStatusFilter(undefined);
                 setSortBy("");
                 setOrder("asc");
               }}

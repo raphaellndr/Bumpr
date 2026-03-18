@@ -5,8 +5,12 @@ import { ClaimService } from "../services/claim";
 
 export const getClaims = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const claims = await ClaimService.findAll();
-
+    const { status, sortBy, order } = req.query as {
+      status?: string;
+      sortBy?: string;
+      order?: string;
+    };
+    const claims = await ClaimService.findAll(status, sortBy, order);
     return res.status(200).json({ data: claims });
   } catch (err) {
     next(err);
